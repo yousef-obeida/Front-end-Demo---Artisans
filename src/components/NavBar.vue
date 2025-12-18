@@ -7,8 +7,8 @@
           <span class="title">Bookstore</span>
         </a>
         <nav class="links">
-          <a href="/" :class="{active: $route.name === 'Home'}" @click="menuOpen = false">Home</a>
-          <a href="/catalog.vue" :class="{active: $route.name === 'Catalog'}" @click="menuOpen = false">Catalog</a>
+          <router-link to="/Home" > Home</router-link>
+          <router-link to="/Catalog" > Catalog</router-link>
         </nav>
       </div>
 
@@ -18,16 +18,16 @@
           <button @click="handleLogout" class="btn-ghost">Logout</button>
         </template>
         <template v-else>
-          <a href="/login" class="btn-primary" @click="menuOpen = false">Login</a>
+          <router-link to="/login" class="btn-primary" @click="menuOpen = false">Login</router-link>
         </template>
-        <button class="menu-btn" @click="menuOpen = !menuOpen" aria-label="Menu">☰</button>
+      
       </div>
     </div>
 
     <div v-if="menuOpen" class="mobile-menu">
       <a href="/" @click="menuOpen = false">Home</a>
       <a href="/catalog" @click="menuOpen = false">Catalog</a>
-      <a href="/login" @click="menuOpen = false">Login</a>
+      <router-link to="/login" @click="menuOpen = false">Login</router-link>
     </div>
   </header>
 </template>
@@ -71,7 +71,8 @@ const handleLogout = () => { logout(); };
 .links a.active { color: var(--brand); font-weight: 700; }
 .right { display: flex; align-items: center; gap: 0.75rem; }
 .btn-primary { background: var(--brand); color: #fff; padding: 0.5rem 0.85rem; border-radius: 8px; text-decoration: none; }
-.btn-ghost { background: transparent; border: 1px solid #e5e7eb; padding: 0.4rem 0.6rem; border-radius: 8px; }
+.btn-ghost { background: transparent; border: 1px solid var(--brand); color: var(--brand); padding: 0.4rem 0.6rem; border-radius: 8px; }
+.btn-ghost:hover { background: rgba(37,99,235,0.08); color: var(--brand-600); border-color: var(--brand-600); }
 .menu-btn { display: none; background: transparent; border: 0; font-size: 1.2rem; }
 .mobile-menu { display: none; flex-direction: column; padding: 0.5rem 1rem; background: #fff; border-top: 1px solid #e5e7eb; }
 @media (max-width: 640px) {

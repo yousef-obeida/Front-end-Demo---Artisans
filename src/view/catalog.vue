@@ -46,8 +46,7 @@ const goBorrow = (book) => {
             <h5 class="card-title">{{ book.title }}</h5>
             <h6 class="card-subtitle mb-2 text-muted">Author: {{ book.author }}</h6>
             <p class="card-text" v-if="expanded[book.title]">{{ book.description }}</p>
-            <button class="btn btn-outline-dark me-2" @click="toggleDescription(book.title)">{{ expanded[book.title] ? 'View less' : 'View more' }}</button>
-            <button class="btn btn-outline-dark" @click.prevent="goBorrow(book)">Borrow</button>
+            <button class="btn-primary" @click="toggleDescription(book.title)">{{ expanded[book.title] ? 'View less' : 'View more' }}</button>
           </div>
         </div>
       </div>

@@ -1,5 +1,4 @@
 
-
 <template>
   <div class="app-root">
     <header><Navbar /></header>
