@@ -2,12 +2,14 @@ import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '@/view/home.vue';
 import LoginView from '@/view/login.vue';
 import CatalogView from '@/view/catalog.vue';
+import BorrowView from '@/view/Borrow.vue';
 import { useAuth } from '@/composables/useAuth';
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: LoginView },
   { path: '/catalog', name: 'Catalog', component: CatalogView, meta: { requiresAuth: true } },
+  { path: '/borrow', name: 'Borrow', component: BorrowView },
 ];
 
 const router = createRouter({

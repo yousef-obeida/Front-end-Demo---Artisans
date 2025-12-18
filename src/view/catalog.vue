@@ -1,80 +1,58 @@
 <script setup>
 import { useBookStore } from '@/stores/bookstore';
-import { computed, onMounted } from 'vue';
+import { computed, ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+
+onMounted(() => {
+  console.log('Catalog mounted');
+});
 
 const store = useBookStore();
 const books = computed(() => store.books);
+const router = useRouter();
 
-const toggle = (id) => store.toggleFav(id);
+const query = ref('');
+const filteredBooks = computed(() => {
+  const q = (query.value || '').toLowerCase();
+  return books.value.filter(book =>
+    book.title.toLowerCase().includes(q) || book.author.toLowerCase().includes(q)
+  );
+});
 
+const expanded = ref({});
+const toggleDescription = (title) => {
+  expanded.value[title] = !expanded.value[title];
+};
 
-function searchBooks(query) {
-    const lowerQuery = (query || '').toLowerCase();
-    const list = books.value || [];
-    return list.filter(book =>
-        book.title.toLowerCase().includes(lowerQuery) ||
-        book.author.toLowerCase().includes(lowerQuery)
-    );
-} 
+const goBorrow = (book) => {
+  router.push({ name: 'Borrow', query: { title: book.title } });
+};
+</script>
+<template>
+  <div class="container py-5">
+    <div class="search-wrapper">
+      <div class="search-box">
+        <input type="text" v-model="query" class="search-input form-control" placeholder="Search anything..." />
+        <i class="fas fa-search search-icon"></i>
+      </div>
+    </div>
 
-function renderBooks() {
-    const container = document.getElementById("bookContainer");
-    container.innerHTML = "";
-
-}
-function handleSearch(event) {
-    const query = event?.target?.value ?? document.getElementById("searchInput")?.value ?? '';
-    const results = searchBooks(query);
-    const container = document.getElementById("bookResults");
-
-    container.innerHTML = results.map(book => `
-    <div class="col-md-3 mb-4">
-      <div class="card h-100 text-center">
-        <img src="${book.image}" class="card-img-top" alt="${book.title}" style="width: 100%; margin: auto; padding-top: 10px; height: 250px; object-fit: cover; border-radius: 8px 8px 0 0;">
-        <div class="card-body">
-          <h5 class="card-title">${book.title}</h5>
-          <h6 class="card-subtitle mb-2 text-muted">Author: ${book.author}</h6>
-          <p class="card-text" style="display: none;">${book.description}</p>
-          <button class="btn btn-outline-dark me-2" onclick="toggleDescription(this)">View more</button>
-          <button class="btn btn-outline-dark" onclick="location.href='${book.borrowLink}'">Borrow</button>
+    <div class="row mt-4">
+      <div class="catalog-debug col-12">Catalog mounted — results: {{ filteredBooks.length }}</div>
+      <div v-if="filteredBooks.length === 0" class="col-12">No results found.</div>
+      <div v-for="book in filteredBooks" :key="book.title" class="col-md-3 mb-4">        <div class="card h-100 text-center">
+          <img :src="book.image" class="card-img-top" :alt="book.title" style="width: 100%; margin: auto; padding-top: 10px; height: 250px; object-fit: cover; border-radius: 8px 8px 0 0;" />
+          <div class="card-body">
+            <h5 class="card-title">{{ book.title }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Author: {{ book.author }}</h6>
+            <p class="card-text" v-if="expanded[book.title]">{{ book.description }}</p>
+            <button class="btn btn-outline-dark me-2" @click="toggleDescription(book.title)">{{ expanded[book.title] ? 'View less' : 'View more' }}</button>
+            <button class="btn btn-outline-dark" @click.prevent="goBorrow(book)">Borrow</button>
+          </div>
         </div>
       </div>
     </div>
-  `).join('');
-}
-
-
-function toggleDescription(button) {
-    const cardBody = button.closest(".card-body");
-    const paragraph = cardBody.querySelector("p");
-    const isHidden = paragraph.style.display === "none";
-    paragraph.style.display = isHidden ? "block" : "none";
-    button.textContent = isHidden ? "View less" : "View more";
-}
-
-onMounted(() => {
-    handleSearch();
-});
-
-</script>
-<template>
-    <div class="container py-5">
-        <div class="search-wrapper">
-            <div class="search-box">
-                <input type="text" id="searchInput" class="search-input form-control" placeholder="Search anything..."
-                    @input="handleSearch">
-                <i class="fas fa-search search-icon"></i>
-            </div>
-        </div>
-    </div>
-
-    <div id="bookResults" class="row mt-4"></div>
-
-    <div class="container">
-        <div class="row" id="bookContainer"></div>
-    </div>
-
-    
+  </div>
 </template>
 
 <style scoped>
