@@ -3,7 +3,7 @@
     <div class="inner">
       <div class="left">
         <a href="/" class="brand" @click="menuOpen = false">
-          <img src="/src/assets/logo.svg" alt="Bookstore" class="logo" />
+          <img src="/assets/logo.svg" alt="Bookstore" class="logo" />
           <span class="title">Bookstore</span>
         </a>
         <nav class="links">
