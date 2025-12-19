@@ -24,9 +24,8 @@ const toggleDescription = (title) => {
   expanded.value[title] = !expanded.value[title];
 };
 
-const goBorrow = (book) => {
-  router.push({ name: 'Borrow', query: { title: book.title } });
-};
+
+
 </script>
 <template>
   <div class="container py-5">

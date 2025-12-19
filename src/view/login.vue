@@ -10,7 +10,6 @@ const { login, isAuthenticating, authError } = useAuth();
 const email = ref('eve.holt@reqres.in');
 const password = ref('cityslicka');
 const formError = ref('');
-const correctCaptchaAnswer = ref(null);
 const isLoginActive = ref(false); // false shows signup by default
 
 const HOME_PAGE = '/';
@@ -23,18 +22,25 @@ const toggleLogin = () => {
 };
 
 
+
 const handleLogin = async () => {
-  formError.value = '';
+  formError.value = ''
+  let valid = true;
   if (!email.value || !password.value) {
-    formError.value = 'Email and password are required.';
-    return;
+    formError.value = 'Email and password are required.'
+    valid = false
+    return
   }
-  const success = await login(email.value, password.value);
-  if (success) {
-    const redirect = route.query.redirect || { name: 'Catalog' };
-    router.push(redirect);
-  }
-};
+
+    const el = document.getElementById('loginSuccess')
+    if (el) el.textContent = 'Log in successful... You are being redirected'
+
+    
+    setTimeout(() => {
+      router.push(HOME_PAGE) 
+    }, 700)
+  };
+
 
 const handleSignup = (e) => {
   e.preventDefault();
@@ -48,7 +54,6 @@ const handleSignup = (e) => {
   document.getElementById('suNameError') && (document.getElementById('suNameError').textContent = '');
   document.getElementById('suEmailError') && (document.getElementById('suEmailError').textContent = '');
   document.getElementById('suPasswordError') && (document.getElementById('suPasswordError').textContent = '');
-  document.getElementById('captchaError') && (document.getElementById('captchaError').textContent = '');
   document.getElementById('signupSuccess') && (document.getElementById('signupSuccess').textContent = '');
 
   let valid = true;
@@ -58,8 +63,6 @@ const handleSignup = (e) => {
   if (suEmail === '') { const el = document.getElementById('suEmailError'); if (el) el.textContent = 'Email required.'; valid = false; }
   else if (!suEmail.includes('@')) { const el = document.getElementById('suEmailError'); if (el) el.textContent = 'The email must contain @limu.edu.ly'; valid = false; }
   if (suPassword.length < 6) { const el = document.getElementById('suPasswordError'); if (el) el.textContent = 'The password must be 6 characters or more.'; valid = false; }
-  if (captchaAnswer === '') { const el = document.getElementById('captchaError'); if (el) el.textContent = 'Please enter the answer to the captcha.'; valid = false; }
-  else if (parseInt(captchaAnswer) !== correctCaptchaAnswer.value) { const el = document.getElementById('captchaError'); if (el) el.textContent = 'The captcha answer is incorrect.'; valid = false; }
 
   if (valid) {
     const el = document.getElementById('signupSuccess'); if (el) el.textContent = 'Account creation successful... You are being redirected';
@@ -104,7 +107,7 @@ const handleSignup = (e) => {
 
       
       
-
+      
       <button type="submit" class="submit-btn">Create Account</button>
       <div id="signupSuccess" class="success-msg"></div>
     </form>
@@ -156,7 +159,8 @@ const handleSignup = (e) => {
 .title {
   text-align: center;
   font-size: 22px;
-  color: var(--brand-600);
+  color: black;
+  margin-bottom: 4px;
 }
 
 .sub-title {
