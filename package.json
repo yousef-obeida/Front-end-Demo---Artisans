@@ -5,7 +5,9 @@
   "type": "module",
   "engines": {
   "node": "18.x"
-},
+  },
+  "compatibility_date": "2025-12-19",
+
   "scripts": {
     "dev": "vite",
     "build": "vite build",
